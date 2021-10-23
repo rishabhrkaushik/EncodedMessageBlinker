@@ -1,4 +1,3 @@
-
 #include <FastLED.h>
 
 #define NUM_LEDS 1 
@@ -6,6 +5,7 @@
 
 CRGB leds[NUM_LEDS];
 
+// color for various states
 CRGB zeroColor = 0xFF0000; // color when one
 CRGB oneColor = 0x0000FF; // color when one
 CRGB offColor = 0x000000; // color when off
@@ -41,10 +41,10 @@ bool ascii[26][8] = {
 };
 
 // string to send length
-int strLength = 25;
+int strLength = 23;
 
 // must be capital or small letters. Numbers and punctuations not allowed
-char *str = "NOT ANOTHER HELLO WORLD  ";
+char *str = "NOT ANOTHER HELLO WORLD";
 
 // send zero
 void zero(){
@@ -93,10 +93,15 @@ void loop() {
 
 // loop through string and send each character
 void sendMessage(){
+
+  // loop through all the letters in the string
   for(int i = 0; i < strLength; i++){
     char letter = str[i];
     
+    // each letter has 8 bits
     for(int j = 0; j < 8; j++){
+
+      // index for capital case
       if(letter >= 65 && letter <= 90){
         if(ascii[letter - 65][j]){
           one();
@@ -105,6 +110,8 @@ void sendMessage(){
           zero();
         }
       }
+
+      // index for small case
       else if(letter >= 97 && letter <= 122){
         if(ascii[letter - 97][j]){
           one();
@@ -113,10 +120,13 @@ void sendMessage(){
           zero();
         }
       }
+
+      // else it is a space
       else {
         space();
       }
     }
+    // turn of led for sometime to distinguish between characters
     nextLetter();
   }
 }
